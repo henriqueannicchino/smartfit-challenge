@@ -1,14 +1,49 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { GetUnitsService } from '../../services/get-units.service';
+import { Location } from '../../types/location.interface';
+import { FilterUnitsService } from '../../services/filter-units.service';
 
 @Component({
   selector: 'app-forms',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './forms.component.html',
-  styleUrl: './forms.component.scss'
+  styleUrl: './forms.component.scss',
 })
-export class FormsComponent {
+export class FormsComponent implements OnInit {
+  results: Location[] = [];
+  filteredResults: Location[] = [];
+  formGroup!: FormGroup;
 
-  results = [];
+  constructor(
+    private formBuilder: FormBuilder,
+    private unitService: GetUnitsService,
+    private filterUnitsService: FilterUnitsService
+  ) {}
 
+  ngOnInit(): void {
+    this.formGroup = this.formBuilder.group({
+      hour: '',
+      showClosed: false,
+    });
+    this.unitService.getAllUnits().subscribe((data) => {
+      this.results = data;
+      this.filteredResults = data;
+    });
+  }
+
+  onSubmit(): void {
+    let {showClosed, hour} = this.formGroup.value;
+    this.filteredResults = this.filterUnitsService.filter(
+      this.results,
+      showClosed,
+      hour
+    );
+    this.unitService.setFilteredUnits(this.filteredResults);
+  }
+
+  onClean(): void {
+    this.formGroup.reset();
+  }
 }
