@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Location } from './types/location.interface';
 import { GetUnitsService } from './services/get-units.service';
 import { CaptionComponent } from "./components/caption/caption.component";
+import { FooterComponent } from "./components/footer/footer.component";
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ import { CaptionComponent } from "./components/caption/caption.component";
     FormsComponent,
     CardsListComponent,
     CommonModule,
-    CaptionComponent
+    CaptionComponent,
+    FooterComponent
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
